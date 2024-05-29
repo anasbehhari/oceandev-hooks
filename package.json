@@ -1,0 +1,26 @@
+{
+  "name": "oceandev-hooks",
+  "version": "1.0.0",
+  "description": "A collection of custom React hooks",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": ["react", "hooks", "typescript"],
+  "author": "Your Name",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "react": "^17.0.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  }
+}
