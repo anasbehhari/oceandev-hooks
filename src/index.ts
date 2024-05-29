@@ -1,1 +1,1 @@
-export { default as useScroll } from './hooks/useScroll';
+export { default as useScrollPosition } from './hooks/use-scroll-position';
