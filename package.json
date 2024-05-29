@@ -1,13 +1,17 @@
 {
   "name": "oceandev-hooks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A collection of custom React hooks",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": ["react", "hooks", "typescript"],
+  "keywords": [
+    "react",
+    "hooks",
+    "typescript"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "files": [
