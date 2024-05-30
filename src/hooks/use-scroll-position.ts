@@ -11,9 +11,10 @@ interface ScrollToOptions {
   direction?: ScrollDirection;
   position?: Partial<ScrollPosition>;
 }
-interface Options {
-  scrollBehavior?: ScrollBehavior;
+interface ScrollOptions {
+  behavior?: ScrollBehavior;
 }
+
 /**
  * Custom hook to manage scroll position within a scrollable container.
  *
@@ -26,7 +27,7 @@ interface Options {
  */
 function useScrollPosition<T extends HTMLElement = HTMLElement>(
   initialScrollPosition?: ScrollPosition,
-  ScrollOptions?: Options
+  scrollOptions?: ScrollOptions
 ) {
   // State to store the current scroll position
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>(
@@ -70,7 +71,7 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
       scrollContainerRef.current.scrollTo({
         left: left !== undefined ? left : scrollContainerRef.current.scrollLeft,
         top: top !== undefined ? top : scrollContainerRef.current.scrollTop,
-        behavior: ScrollOptions?.scrollBehavior || 'instant',
+        behavior: scrollOptions?.behavior,
       });
     }
   }, []);
