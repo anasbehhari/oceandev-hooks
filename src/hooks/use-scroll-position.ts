@@ -5,24 +5,33 @@ interface ScrollPosition {
   y: number;
 }
 
+type ScrollDirection = 'top' | 'bottom' | 'left' | 'right';
+
+interface ScrollToOptions {
+  direction?: ScrollDirection;
+  position?: Partial<ScrollPosition>;
+}
+
 /**
  * Custom hook to manage scroll position within a scrollable container.
  *
  * @param {ScrollPosition} [initialScrollPosition] - Optional initial scroll position.
- * @returns {readonly [ScrollPosition, React.RefObject<T>, () => void, boolean]} An array containing:
+ * @returns {readonly [ScrollPosition, React.RefObject<T>, (options?: ScrollToOptions) => void, boolean]} An array containing:
  * - `scrollPosition`: The current scroll position `{ x, y }`.
  * - `scrollContainerRef`: A ref object to attach to the scrollable container.
- * - `scrollToTop`: A function to scroll the container to the top.
+ * - `scrollTo`: A function to scroll the container to specified coordinates or direction.
  * - `isAtBottom`: A boolean indicating if the container is scrolled to the bottom.
  */
 function useScrollPosition<T extends HTMLElement = HTMLElement>(
   initialScrollPosition?: ScrollPosition
 ) {
   // State to store the current scroll position
-  const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({
-    x: 0,
-    y: 0,
-  });
+  const [scrollPosition, setScrollPosition] = useState<ScrollPosition>(
+    initialScrollPosition || {
+      x: 0,
+      y: 0,
+    }
+  );
 
   // State to indicate if the scroll position is at the bottom of the container
   const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
@@ -31,12 +40,33 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
   const scrollContainerRef = useRef<T>(null);
 
   /**
-   * Scroll the container to the top with smooth behavior.
+   * Scroll the container to the specified coordinates or direction with smooth behavior.
    */
-  const scrollToTop = useCallback(() => {
+  const scrollTo = useCallback((options?: ScrollToOptions) => {
     if (scrollContainerRef.current) {
+      const { direction, position } = options || {};
+
+      let left = position?.x;
+      let top = position?.y;
+
+      switch (direction) {
+        case 'top':
+          top = 0;
+          break;
+        case 'bottom':
+          top = scrollContainerRef.current.scrollHeight;
+          break;
+        case 'left':
+          left = 0;
+          break;
+        case 'right':
+          left = scrollContainerRef.current.scrollWidth;
+          break;
+      }
+
       scrollContainerRef.current.scrollTo({
-        top: 0,
+        left: left !== undefined ? left : scrollContainerRef.current.scrollLeft,
+        top: top !== undefined ? top : scrollContainerRef.current.scrollTop,
         behavior: 'smooth',
       });
     }
@@ -68,8 +98,24 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
         setIsAtBottom(false);
       }
     };
-
     const currentRef = scrollContainerRef.current;
+
+    const resetOnElementChange = (mutationList: any) => {
+      for (const mutation of mutationList) {
+        if (mutation.type === 'childList' && currentRef) {
+          const {
+            clientHeight = 0,
+            scrollHeight = 0,
+            scrollTop = 0,
+          } = scrollContainerRef.current;
+          setIsAtBottom(scrollHeight - scrollTop === clientHeight);
+          setScrollPosition({
+            x: scrollContainerRef.current.scrollLeft,
+            y: scrollContainerRef.current.scrollTop,
+          });
+        }
+      }
+    };
 
     if (currentRef) {
       // Add scroll event listener to update scroll position
@@ -80,21 +126,27 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
         currentRef.scrollTo({
           left: initialScrollPosition.x,
           top: initialScrollPosition.y,
-          behavior: 'smooth',
         });
       }
-    }
 
-    // Cleanup function to remove the scroll event listener
-    return () => {
-      if (currentRef) {
+      // Observe changes in the container's children
+      const observer = new MutationObserver(resetOnElementChange);
+      observer.observe(currentRef, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+
+      // Cleanup function to remove the scroll event listener and disconnect the observer
+      return () => {
         currentRef.removeEventListener('scroll', updateScrollPosition);
-      }
-    };
-  }, [initialScrollPosition]);
+        observer.disconnect();
+      };
+    }
+  }, []);
 
-  // Return the scroll position, ref, scrollToTop function, and isAtBottom state
-  return [scrollPosition, scrollContainerRef, scrollToTop, isAtBottom] as const;
+  // Return the scroll position, ref, scrollTo function, and isAtBottom state
+  return [scrollPosition, scrollContainerRef, scrollTo, isAtBottom] as const;
 }
 
 export default useScrollPosition;
