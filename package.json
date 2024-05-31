@@ -1,11 +1,11 @@
 {
   "name": "oceandev-hooks",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A collection of custom React hooks",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "prettier --write 'src/**/*.{js,jsx,ts,tsx}' && tsc",
+    "build": "prettier --write './**/*.{ts,tsx}' && tsc",
     "test": "jest"
   },
   "keywords": [
