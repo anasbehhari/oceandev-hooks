@@ -13,7 +13,7 @@
     "hooks",
     "typescript"
   ],
-  "author": "Your Name",
+  "author": "Anas BEHHARI",
   "license": "MIT",
   "files": [
     "dist"
@@ -31,5 +31,10 @@
     "eslint": "^7.30.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anasbehhari/oceandev-hooks.git"
+  },
+  "homepage": "https://github.com/anasbehhari/oceandev-hooks.git"
 }
