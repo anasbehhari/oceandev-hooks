@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
  * - `isOpen`: Boolean indicating if the element is open.
  * - `toggleOpen`: Function to toggle the open state.
  * - `elementRef`: A ref object to attach to the element you want to detect clicks outside of.
+ * test
  *
  * @example
  * const [isOpen, toggleOpen, ref] = useClickOutside(() => {
