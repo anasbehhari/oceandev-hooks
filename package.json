@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "prettier --write './**/*.{ts,tsx}' && tsc",
-    "test": "jest"
+    "build": "npm run lint && prettier --write 'src/**/*.{ts,tsx}' && tsc",
+    "test": "jest",
+    "lint": "eslint ./src/hooks --ext .ts"
   },
   "keywords": [
     "react",
@@ -29,6 +30,8 @@
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
     "eslint": "^7.30.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.2",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   },

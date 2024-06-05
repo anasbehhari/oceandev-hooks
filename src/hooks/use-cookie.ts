@@ -36,7 +36,7 @@ function useCookie<T>(key: string) {
   const getCookie = useCallback(() => {
     try {
       const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
+      for (const cookie of cookies) {
         const [cookieKey, cookieValue] = cookie.split('=');
         if (cookieKey.trim() === key) {
           return JSON.parse(cookieValue);
