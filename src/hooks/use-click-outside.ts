@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Custom hook to detect clicks outside a specified element and manage open state.
@@ -16,8 +16,9 @@ import { useEffect, useRef, useState } from 'react';
  *   console.log('Clicked outside!');
  * });
  */
+
 function useClickOutside<T extends HTMLElement = HTMLElement>(
-  callback?: () => void
+  callback?: () => void,
 ) {
   const [isOpen, setIsOpen] = useState(false);
   const elementRef = useRef<T>(null);
@@ -40,8 +41,8 @@ function useClickOutside<T extends HTMLElement = HTMLElement>(
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [callback]);
 
   const toggleOpen = () => {

@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ScrollPosition {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
 }
 
-type ScrollDirection = 'top' | 'bottom' | 'left' | 'right';
+type ScrollDirection = "top" | "bottom" | "left" | "right";
 
-interface ScrollToOptions {
+export interface ScrollToOptions {
   direction?: ScrollDirection;
   position?: Partial<ScrollPosition>;
 }
-interface ScrollOptions {
+
+export interface ScrollOptions {
   behavior?: ScrollBehavior;
 }
 
@@ -27,14 +28,14 @@ interface ScrollOptions {
  */
 function useScrollPosition<T extends HTMLElement = HTMLElement>(
   initialScrollPosition?: ScrollPosition,
-  scrollOptions?: ScrollOptions
+  scrollOptions?: ScrollOptions,
 ) {
   // State to store the current scroll position
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>(
     initialScrollPosition || {
       x: 0,
       y: 0,
-    }
+    },
   );
 
   // State to indicate if the scroll position is at the bottom of the container
@@ -54,16 +55,16 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
       let top = position?.y;
 
       switch (direction) {
-        case 'top':
+        case "top":
           top = 0;
           break;
-        case 'bottom':
+        case "bottom":
           top = scrollContainerRef.current.scrollHeight;
           break;
-        case 'left':
+        case "left":
           left = 0;
           break;
-        case 'right':
+        case "right":
           left = scrollContainerRef.current.scrollWidth;
           break;
       }
@@ -102,11 +103,10 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
         setIsAtBottom(false);
       }
     };
-    const currentRef = scrollContainerRef.current;
 
-    const resetOnElementChange = (mutationList: any) => {
+    const resetOnElementChange = (mutationList: MutationRecord[]) => {
       for (const mutation of mutationList) {
-        if (mutation.type === 'childList' && currentRef) {
+        if (mutation.type === "childList" && scrollContainerRef.current) {
           const {
             clientHeight = 0,
             scrollHeight = 0,
@@ -121,9 +121,11 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
       }
     };
 
+    const currentRef = scrollContainerRef.current;
+
     if (currentRef) {
       // Add scroll event listener to update scroll position
-      currentRef.addEventListener('scroll', updateScrollPosition);
+      currentRef.addEventListener("scroll", updateScrollPosition);
 
       // Set initial scroll position if provided
       if (initialScrollPosition) {
@@ -143,7 +145,7 @@ function useScrollPosition<T extends HTMLElement = HTMLElement>(
 
       // Cleanup function to remove the scroll event listener and disconnect the observer
       return () => {
-        currentRef.removeEventListener('scroll', updateScrollPosition);
+        currentRef.removeEventListener("scroll", updateScrollPosition);
         observer.disconnect();
       };
     }
