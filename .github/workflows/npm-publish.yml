@@ -1,34 +1,31 @@
-name: Build and Publish
+name: build & publish
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
 
 jobs:
-  build_and_publish:
+  test_pull_request:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14'
-      
+          node-version-file: ".nvmrc"
+          cache: "yarn"
+          cache-dependency-path: "**/yarn.lock"
       - name: Install dependencies
-        run: npm install
-      
-      - name: Build package
+        run: yarn
+      - name: Run build
         run: npm run build
-
+      - name: Run tests
+        run: npm test
       - name: Publish package to npm
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Check build status
-        if: ${{ failure() }}
-        run: exit 1

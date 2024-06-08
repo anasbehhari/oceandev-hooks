@@ -1,12 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
 /**
  * Custom hook to manage localStorage.
  *
  * @param {string} key - The key under which the value is stored in localStorage.
  * @returns {readonly [
- *   (value: any) => void,
- *   () => any,
+ *   (value: string | Function | number) => void,
+ *   () => string | Function | number,
  *   () => {key: string, value: string}[],
  *   () => void
  * ]} An array containing:
@@ -20,16 +20,15 @@ function useLocalStorage<T>(key: string) {
 
   // Function to set the value in localStorage
   const setItem = useCallback(
-    (value: any) => {
+    (value: string) => {
       try {
-        const valueToStore = value instanceof Function ? value() : value;
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        window.localStorage.setItem(key, JSON.stringify(value));
         setTrigger((prev) => !prev); // Trigger state change
       } catch (error) {
-        console.warn('Error setting localStorage key “' + key + '”: ', error);
+        console.warn("Error setting localStorage key “" + key + "”: ", error);
       }
     },
-    [key]
+    [key],
   );
 
   // Function to get the value from localStorage
@@ -38,7 +37,7 @@ function useLocalStorage<T>(key: string) {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : null;
     } catch (error) {
-      console.warn('Error reading localStorage key “' + key + '”: ', error);
+      console.warn("Error reading localStorage key “" + key + "”: ", error);
       return null;
     }
   }, [key]);
@@ -56,7 +55,7 @@ function useLocalStorage<T>(key: string) {
       }
       return items;
     } catch (error) {
-      console.warn('Error getting all localStorage items: ', error);
+      console.warn("Error getting all localStorage items: ", error);
       return [];
     }
   }, [_, setTrigger]);
@@ -67,7 +66,7 @@ function useLocalStorage<T>(key: string) {
       window.localStorage.removeItem(key);
       setTrigger((prev) => !prev); // Trigger state change
     } catch (error) {
-      console.warn('Error removing localStorage key “' + key + '”: ', error);
+      console.warn("Error removing localStorage key “" + key + "”: ", error);
     }
   }, [key]);
 

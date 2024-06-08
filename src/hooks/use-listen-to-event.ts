@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react';
+import { RefObject, useEffect } from "react";
 
 /**
  * Custom hook to manage event listening on one or multiple DOM elements.
@@ -30,7 +30,7 @@ import { RefObject, useEffect } from 'react';
 function useListenToEvent<T extends HTMLElement = HTMLElement>(
   refOrRefs: RefObject<T> | RefObject<T>[],
   event: keyof HTMLElementEventMap,
-  callback: (ev: HTMLElementEventMap[keyof HTMLElementEventMap]) => void
+  callback: (ev: HTMLElementEventMap[keyof HTMLElementEventMap]) => void,
 ) {
   useEffect(() => {
     const refArray = Array.isArray(refOrRefs) ? refOrRefs : [refOrRefs];
